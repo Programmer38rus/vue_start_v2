@@ -1,5 +1,7 @@
 import bottle
+from truckpad.bottle.cors import CorsPlugin, enable_cors
 
+app = bottle.Bottle()
 
 class Todoitem:
     def __init__(self, descriprion, unique_id):
@@ -29,9 +31,10 @@ tasks_db = {
     for uid, desc in enumerate(iterable=task_list, start=1)
 }
 
-
-@bottle.route("/api/tasks")
+@enable_cors
+@app.route("/api/tasks")
 def index():
+    # bottle.response.headers['Access-Control-Allow-Origin'] = 'http://localhost:8080'
     tasks = [task.to_dict() for task in tasks_db.values()]
     for i in tasks_db.values():
         print(i)
@@ -64,7 +67,8 @@ def api_complete(uid):
     tasks_db[uid].is_completed = True
     return "OK"
 
+app.install(CorsPlugin(origins=['http://localhost:5000']))
 
 ###
 if __name__ == "__main__":
-    bottle.run(host="localhost", port=5000)
+    bottle.run(app ,host="localhost", port=5000)

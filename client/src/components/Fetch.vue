@@ -1,19 +1,38 @@
 <template>
   <div>
-    <p>{{ msg }}</p>
+    <h1>Todos</h1>
+    <table>
+      <thead>
+      <tr>
+        <th>Uid</th>
+        <th>Описание</th>
+        <th>Выполнена?</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="(todo, index) in todos" :key="index">
+        <td>{{ todo.uid }}</td>
+        <td>{{ todo.description}}</td>
+        <td>
+          <span v-if="todo.is_completed">Выполнено</span>
+          <span v-else>Невыполнено</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 
-const dataURL = 'https://api.jsonbin.io/b/5e90e8278e85c84370140777';
+const dataURL = 'http://localhost:5000/api/tasks';
 
 export default {
   name: 'Fetch',
   data() {
     return {
-      msg: 'Запрос еще не прошел.',
+      todos: [],
     };
   },
   // created() {
@@ -25,10 +44,12 @@ export default {
   // },
   methods: {
     getMessage() {
+      console.log('функция запустилась');
       axios.get(dataURL)
         .then((response) => {
-          this.msg = response.data.message;
-          // console.log(this);
+          // this.msg = response.data.message;
+          this.todos = response.data.tasks;
+          console.table(this.todos);
         });
     },
   },

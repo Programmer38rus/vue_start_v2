@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import Fetch from '../components/Fetch.vue';
 // import Home from '../views/Home.vue';
 
 Vue.use(VueRouter);
@@ -28,7 +29,8 @@ const routes = [
   {
     path: '/fetch',
     name: 'Fetch',
-    component: () => import('../components/Fetch.vue'),
+    // component: () => import('../components/Fetch.vue'),
+    component: Fetch,
   },
 ];
 
