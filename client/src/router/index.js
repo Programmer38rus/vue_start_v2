@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Fetch from '../components/Fetch.vue';
+import Todos from '../components/Todos.vue';
 // import Home from '../views/Home.vue';
 
 Vue.use(VueRouter);
@@ -10,8 +11,12 @@ const routes = [
     path: '/',
     name: 'Home',
     // component: Home,
-
     component: () => import('../views/Home.vue'),
+  },
+  {
+    path: '/todos',
+    name: 'Todos',
+    component: Todos,
   },
   {
     path: '/about',
