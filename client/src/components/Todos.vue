@@ -46,12 +46,12 @@
         <b-form-group id="form-description-group"
           label="Описание"
           label-for="form-descrition-input">
-          <b-form-input id="form-description-input"
-            type="text"
-            v-model="addTodoForm.description"
-            required
-            placeholder="Завести задачу">
-          </b-form-input>
+        <b-form-input id="form-description-input"
+          type="text"
+          v-model="addTodoForm.description"
+          required
+          placeholder="Завести задачу">
+        </b-form-input>
         </b-form-group>
         <b-form-group id="form-complete-group">
           <b-form-checkbox-group v-model="addTodoForm.is_completed" id="form-checks">
@@ -79,16 +79,16 @@ export default {
       addTodoForm: {
         description: '',
         is_completed: [],
-      }
+      },
     };
   },
 
   methods: {
-    getMessage() {
+    getTodos() {
       axios.get(todoListURL)
         .then((response) => {
           this.todos = response.data.tasks;
-          console.log.table(this.todos);
+          console.table(response.data.tasks);
         });
     },
     resetForm() {
@@ -100,11 +100,18 @@ export default {
       this.$refs.addTodoModal.hide();
       const requestData = {
         description: this.addTodoForm.description,
-      }
+        in_completed: this.addTodoForm.is_completed[0],
+      };
+      axios.post(todoAddURL, requestData)
+        .then(() => {
+          this.getTodos();
+          console.log(this);
+        });
+      this.resetForm();
     },
   },
   created() {
-    this.getMessage();
+    this.getTodos();
   },
 };
 </script>
