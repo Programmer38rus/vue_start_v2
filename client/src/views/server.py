@@ -71,4 +71,4 @@ app.install(CorsPlugin(origins=['http://localhost:5000']))
 
 ###
 if __name__ == "__main__":
-    bottle.run(app ,host="localhost", port=5000)
+    bottle.run(app, host="localhost", port=5000)

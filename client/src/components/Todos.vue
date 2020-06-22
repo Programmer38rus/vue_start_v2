@@ -62,6 +62,9 @@
         <b-button type="reset" variant="danger">Сброс</b-button>
       </b-form>
     </b-modal>
+    <div>
+      <b-button variant="danger">RELLYTi</b-button>
+    </div>
   </div>
 </template>
 
