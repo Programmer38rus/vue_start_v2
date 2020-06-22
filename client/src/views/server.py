@@ -45,8 +45,13 @@ def index():
 def add_task():
     desc = bottle.request.json['description']
     print(desc)
-    is_completed = bottle.request.json['is_completed']
+    # if bottle.request.json['is_completed'] == True:
+    #     is_completed = bottle.request.json['is_completed']
+    # else:
+    #     is_completed = False
+
     # desc = bottle.request.forms.get("desc")
+
     print(is_completed)
 
     if len(desc) > 0:
