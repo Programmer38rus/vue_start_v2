@@ -2,7 +2,8 @@
   <div class="container">
     <div class="col-sm-10">
       <h1>TASKS</h1>
-      <button type="button" id="task-add" class="btn btn-success btn-sm align-left d-block">
+      <button type="button" id="task-add" class="btn btn-success btn-sm align-left d-block"
+              v-b-modal.todo-modal>
         Добавить задачу
       </button>
 
@@ -22,8 +23,8 @@
             <td class="todo-uid">{{ todo.uid }}</td>
             <td>{{ todo.description }} </td>
             <td>
-              <span v-if="todo.is_complited">Выполнено</span>
-              <span v-else>Не выполнено</span>
+              <span v-if="todo.is_completed">Выполнено</span>
+              <span v-else>Не выполнена</span>
             </td>
             <td>
               <div class="btn-group" role="group">
@@ -62,8 +63,9 @@
         <b-button type="reset" variant="danger">Сброс</b-button>
       </b-form>
     </b-modal>
-    <div>
+    <div class="d-flex justify-content-center mt-5">
       <b-button variant="danger">RELLYTi</b-button>
+      <b-col lg="4"><b-button variant="success">RELLYTi</b-button></b-col>
     </div>
   </div>
 </template>
@@ -91,7 +93,7 @@ export default {
       axios.get(todoListURL)
         .then((response) => {
           this.todos = response.data.tasks;
-          console.table(response.data.tasks);
+          console.table(this.todos);
         });
     },
     resetForm() {
@@ -103,13 +105,18 @@ export default {
       this.$refs.addTodoModal.hide();
       const requestData = {
         description: this.addTodoForm.description,
-        in_completed: this.addTodoForm.is_completed[0],
+        is_completed: this.addTodoForm.is_completed[0],
       };
       axios.post(todoAddURL, requestData)
         .then(() => {
           this.getTodos();
           console.log(this);
         });
+      this.resetForm();
+    },
+    onReset(event) {
+      event.preventDefault();
+      this.$refs.addTodoModal.hide();
       this.resetForm();
     },
   },
