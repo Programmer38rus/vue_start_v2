@@ -110,7 +110,9 @@ export default {
       axios.post(todoAddURL, requestData)
         .then(() => {
           this.getTodos();
-          console.log(this);
+          if (Boolean(requestData['is_completed']));
+              console.log("kuku");
+          // console.log(requestData);
         });
       this.resetForm();
     },

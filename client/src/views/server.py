@@ -44,23 +44,25 @@ def index():
 @app.route("/api/add-task/", method="POST")
 def add_task():
     desc = bottle.request.json['description']
-    print(desc)
-    # if bottle.request.json['is_completed'] == True:
-    #     is_completed = bottle.request.json['is_completed']
-    # else:
-    #     is_completed = False
-
+    # a = bottle.request.json['is_completed']
+    # print(a)
+    print(bottle.request.json)
+    if bottle.request.json['is_completed'] == "true":
+        is_completed = True
+    else:
+        print("запустился элс")
+        is_complete = False
     # desc = bottle.request.forms.get("desc")
 
     print(is_completed)
 
-    if len(desc) > 0:
-
-        new_uid = max(tasks_db.keys()) + 1
-        t = Todoitem(desc, new_uid)
-        t.is_completed = is_completed
-        tasks_db[new_uid] = t
-        print("мы тут были")
+    # if len(desc) > 0:
+    #
+    #     new_uid = max(tasks_db.keys()) + 1
+    #     t = Todoitem(desc, new_uid)
+    #     t.is_completed = is_completed
+    #     tasks_db[new_uid] = t
+    #     print("мы тут были")
     return "OK"
 
 
