@@ -56,13 +56,13 @@ def add_task():
 
     print(is_completed)
 
-    # if len(desc) > 0:
-    #
-    #     new_uid = max(tasks_db.keys()) + 1
-    #     t = Todoitem(desc, new_uid)
-    #     t.is_completed = is_completed
-    #     tasks_db[new_uid] = t
-    #     print("мы тут были")
+    if len(desc) > 0:
+
+        new_uid = max(tasks_db.keys()) + 1
+        t = Todoitem(desc, new_uid)
+        t.is_completed = is_completed
+        tasks_db[new_uid] = t
+        print("мы тут были")
     return "OK"
 
 
