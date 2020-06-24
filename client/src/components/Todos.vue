@@ -2,11 +2,11 @@
   <div class="container">
     <div class="col-sm-10">
       <h1>TASKS</h1>
+      <confirmation></confirmation>
       <button type="button" id="task-add" class="btn btn-success btn-sm align-left d-block"
-              v-b-modal.todo-modal>
+        v-b-modal.todo-modal>
         Добавить задачу
       </button>
-
       <table class="table table-dark table-table-stripped table-hover">
 
         <thead class="thead-light">
@@ -46,7 +46,7 @@
       <b-form @submit="onSubmit" @reset="onReset" class="w-100">
         <b-form-group id="form-description-group"
           label="Описание"
-          label-for="form-descrition-input">
+          label-for="form-description-input">
         <b-form-input id="form-description-input"
           type="text"
           v-model="addTodoForm.description"
@@ -64,18 +64,19 @@
       </b-form>
     </b-modal>
     <div class="d-flex justify-content-center mt-5">
-      <b-button variant="danger">RELLYTi</b-button>
+      <b-button variant="danger" id="testbtn">RELLYTi</b-button>
       <b-col lg="4"><b-button variant="success">RELLYTi</b-button></b-col>
+      <b-textarea v-model="texts"></b-textarea>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Confirmation from './Confirmation.vue';
 
 const todoListURL = 'http://localhost:5000/api/tasks';
 const todoAddURL = 'http://localhost:5000/api/add-task/';
-
 export default {
   name: 'Todo',
   data() {
@@ -85,6 +86,7 @@ export default {
         description: '',
         is_completed: [],
       },
+      texts: 'текст как есть',
     };
   },
 
@@ -103,16 +105,20 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       this.$refs.addTodoModal.hide();
+
+      // this.$refs.addTodoModal.toggle('#testbtn');
       const requestData = {
         description: this.addTodoForm.description,
         is_completed: this.addTodoForm.is_completed[0],
       };
+      if (requestData.is_completed) {
+        requestData.is_completed = true;
+      } else {
+        requestData.is_completed = false;
+      }
       axios.post(todoAddURL, requestData)
         .then(() => {
           this.getTodos();
-          if (Boolean(requestData['is_completed']));
-              console.log("kuku");
-          // console.log(requestData);
         });
       this.resetForm();
     },
@@ -121,6 +127,13 @@ export default {
       this.$refs.addTodoModal.hide();
       this.resetForm();
     },
+    // тестовая функция
+    textViewer() {
+      console.log('Работает функция');
+    },
+  },
+  components: {
+    confirmation: Confirmation,
   },
   created() {
     this.getTodos();
