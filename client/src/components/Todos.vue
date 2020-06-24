@@ -2,7 +2,10 @@
   <div class="container">
     <div class="col-sm-10">
       <h1>TASKS</h1>
-      <confirmation></confirmation>
+      <confirmation
+              :message='confirmationMessage'
+              v-if='showConfirmation'>
+      </confirmation>
       <button type="button" id="task-add" class="btn btn-success btn-sm align-left d-block"
         v-b-modal.todo-modal>
         Добавить задачу
@@ -64,8 +67,8 @@
       </b-form>
     </b-modal>
     <div class="d-flex justify-content-center mt-5">
-      <b-button variant="danger" id="testbtn">RELLYTi</b-button>
-      <b-col lg="4"><b-button variant="success">RELLYTi</b-button></b-col>
+      <b-button variant="danger" id="testbtn" type="hider">RELLYTi</b-button>
+      <b-col lg="4"><b-button variant="success" type="hider">RELLYTi</b-button></b-col>
       <b-textarea v-model="texts"></b-textarea>
     </div>
   </div>
@@ -86,6 +89,8 @@ export default {
         description: '',
         is_completed: [],
       },
+      confirmationMessage: '',
+      showConfirmation: false,
       texts: 'текст как есть',
     };
   },
@@ -95,7 +100,7 @@ export default {
       axios.get(todoListURL)
         .then((response) => {
           this.todos = response.data.tasks;
-          console.table(this.todos);
+          console.log(Confirmation);
         });
     },
     resetForm() {
@@ -105,7 +110,7 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       this.$refs.addTodoModal.hide();
-
+      console.log(this.$refs);
       // this.$refs.addTodoModal.toggle('#testbtn');
       const requestData = {
         description: this.addTodoForm.description,
@@ -119,6 +124,10 @@ export default {
       axios.post(todoAddURL, requestData)
         .then(() => {
           this.getTodos();
+          this.confirmationMessage = `Задача "${requestData.description}" добавлена`;
+          this.showConfirmation = true;
+          // Confirmation.methods.hider(true);
+          // console.log(this);
         });
       this.resetForm();
     },
@@ -130,6 +139,10 @@ export default {
     // тестовая функция
     textViewer() {
       console.log('Работает функция');
+    },
+    hider(event) {
+      event.preventDefault();
+      console.log('ljkhdfgkjh');
     },
   },
   components: {
