@@ -1,10 +1,11 @@
 <template>
   <div>
     <div>
-      <b-alert ref="hider" variant="success" show>{{ message }}
+      <b-alert ref="hider" variant="success" show
+      >{{ message }}
         <b-button type="hider" class="close" data-dismiss="alert"
           aria-label="Close"
-          @click="hider(false)">
+          @click="hider()">
           <span aria-hidden="true">&times;</span>
         </b-button>
       </b-alert>

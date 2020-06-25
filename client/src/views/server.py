@@ -32,7 +32,7 @@ tasks_db = {
 }
 
 @enable_cors
-@app.route("/api/tasks")
+@app.route("/api/tasks/")
 def index():
     # bottle.response.headers['Access-Control-Allow-Origin'] = 'http://localhost:8080'
     tasks = [task.to_dict() for task in tasks_db.values()]
@@ -53,6 +53,20 @@ def add_task():
         tasks_db[new_uid] = t
     return "OK"
 
+@enable_cors
+@app.route("/api/tasks/<uid:int>", method=["GET", "PUT", "DELETE"])
+def show_or_modify_task(uid):
+    if bottle.request.method == "GET":
+        return tasks_db[uid].to_dict()
+    elif bottle.request.method == "PUT":
+        if "description" in bottle.request.json:
+            tasks_db[uid].description = bottle.request.json["description"]
+        if "is_completed" in bottle.request.json:
+            tasks_db[uid].is_completed = bottle.request.json["is_completed"]
+        return f'Modified task {uid}'
+    elif bottle.request.method == "DELETE":
+        tasks_db.pop(uid)
+        return f"Deleted task {uid}"
 
 @bottle.route("/api/delete/<uid:int>")
 def api_delete(uid):

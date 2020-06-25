@@ -78,7 +78,7 @@
 import axios from 'axios';
 import Confirmation from './Confirmation.vue';
 
-const todoListURL = 'http://localhost:5000/api/tasks';
+const todoListURL = 'http://localhost:5000/api/tasks/';
 const todoAddURL = 'http://localhost:5000/api/add-task/';
 export default {
   name: 'Todo',
