@@ -30,6 +30,7 @@ tasks_db = {
     uid: Todoitem(desc, uid)
     for uid, desc in enumerate(iterable=task_list, start=1)
 }
+print(tasks_db)
 
 @enable_cors
 @app.route("/api/tasks/")

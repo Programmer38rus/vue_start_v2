@@ -15,22 +15,30 @@
           </b-form-input>
         </b-form-group>
         <b-form-group id="form-update-complete-group">
-          <b-form-checkbox-group v-model="updateTodoFrom.is_completed" id="from-update-checks">
-
+          <b-form-checkbox-group v-model="updateTodoForm.is_completed" id="from-update-checks">
+            <b-form-checkbox value="true">Task is completed</b-form-checkbox>
           </b-form-checkbox-group>
-
         </b-form-group>
+        <b-button-group>
+          <b-button type="submit" variant="primary">Submit</b-button>
+          <b-button type="reset" variant="danger">Reset</b-button>
+        </b-button-group>
       </b-form>
     </b-modal>
   </div>
 </template>
 
 <script>
-    export default {
-        name: "updateTodoModal"
-    }
+export default {
+  name: 'updateTodoModal',
+  data() {
+    return {
+      updateTodoForm: {
+        uid: 0,
+        description: '',
+        is_completed: [],
+      },
+    };
+  },
+};
 </script>
-
-<style scoped>
-
-</style>

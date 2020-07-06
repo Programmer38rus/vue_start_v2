@@ -31,17 +31,22 @@
             </td>
             <td>
               <div class="btn-group" role="group">
-                <button type="button" class="btn btn-secondary btn-sm">Обновить</button>
+<!--                -->
+<!--                -->
+                <button type="button" v-b-modal.todo-update-modal @click="updateTodo(todo)"
+                        class="btn btn-secondary btn-sm">Обновить</button>
                 &nbsp;
-                <button type="button" class="btn btn-danger btn-sm">X</button>
+<!--                -->
+                <b-button id="del" class="btn btn-danger btn-sm"
+                          @click="onDeleted(todo)">X</b-button>
               </div>
             </td>
           </tr>
         </tbody>
-
       </table>
-
     </div>
+
+<!--    Модальное окно добавления задач-->
     <b-modal ref="addTodoModal"
       id="todo-modal"
       title="Добавить задачу"
@@ -66,10 +71,41 @@
         <b-button type="reset" variant="danger">Сброс</b-button>
       </b-form>
     </b-modal>
+<!--    Эксперементальная часть-->
     <div class="d-flex justify-content-center mt-5">
       <b-button variant="danger" id="testbtn" type="hider">RELLYTi</b-button>
       <b-col lg="4"><b-button variant="success" type="hider">RELLYTi</b-button></b-col>
-      <b-textarea v-model="texts"></b-textarea>
+      <b-textarea v-model="todo"></b-textarea>
+
+    </div>
+
+<!--    Модальное окно изменения задач-->
+    <div>
+      <b-modal ref="updateTodoModal"
+               id="todo-update-modal"
+               title="Update"
+               hide-footer>
+        <b-form @submit="onUpdateSubmit" @reset="onUpdateReset" class="w-100">
+          <b-form-group id="from-update-description-group"
+                        label="Описание"
+                        label-for="form-update-description-input">
+            <b-form-input id="form-update-description-input"
+                          type="text"
+                          v-model="updateTodoForm.description"
+                          required>
+            </b-form-input>
+          </b-form-group>
+          <b-form-group id="form-update-complete-group">
+            <b-form-checkbox-group v-model="updateTodoForm.is_completed" id="from-update-checks">
+              <b-form-checkbox value="true">Task is completed</b-form-checkbox>
+            </b-form-checkbox-group>
+          </b-form-group>
+          <b-button-group>
+            <b-button type="submit" variant="primary">Submit</b-button>
+            <b-button type="reset" variant="danger">Reset</b-button>
+          </b-button-group>
+        </b-form>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -78,14 +114,22 @@
 import axios from 'axios';
 import Confirmation from './Confirmation.vue';
 
-const todoListURL = 'http://localhost:5000/api/tasks/';
+const dataURL = 'http://localhost:5000/api/tasks/';
+// const todoListURL = 'http://localhost:5000/api/tasks/';
 const todoAddURL = 'http://localhost:5000/api/add-task/';
+// const todoDeleted = 'http://localhost:5000/api/tasks/3';
+
 export default {
   name: 'Todo',
   data() {
     return {
       todos: [],
       addTodoForm: {
+        description: '',
+        is_completed: [],
+      },
+      updateTodoForm: {
+        uid: 0,
         description: '',
         is_completed: [],
       },
@@ -97,7 +141,7 @@ export default {
 
   methods: {
     getTodos() {
-      axios.get(todoListURL)
+      axios.get(dataURL)
         .then((response) => {
           this.todos = response.data.tasks;
           console.log(Confirmation);
@@ -106,6 +150,8 @@ export default {
     resetForm() {
       this.addTodoForm.description = '';
       this.addTodoForm.is_completed = [];
+      this.updateTodoForm.description = '';
+      this.updateTodoForm.is_completed = [];
     },
     onSubmit(event) {
       event.preventDefault();
@@ -136,13 +182,40 @@ export default {
       this.$refs.addTodoModal.hide();
       this.resetForm();
     },
-    // тестовая функция
-    textViewer() {
-      console.log('Работает функция');
+    updateTodo(todo) {
+      this.updateTodoForm = todo;
     },
-    hider(event) {
+    onUpdateSubmit(event) {
       event.preventDefault();
-      console.log('ljkhdfgkjh');
+      this.$refs.updateTodoModal.hide();
+      const requestData = {
+        description: this.updateTodoForm.description,
+        is_completed: this.updateTodoForm.is_completed[0],
+      };
+      const todoURL = dataURL + this.updateTodoForm.uid;
+      axios.put(todoURL, requestData)
+        .then(() => {
+          console.log(todoURL);
+          this.getTodos();
+          this.confirmationMessage = 'Задача обновлена';
+          this.showConfirmation = true;
+        });
+    },
+    onUpdateReset(event) {
+      event.preventDefault();
+      this.resetForm();
+      this.confirmationMessage = 'Задача обновлена';
+      this.showConfirmation = true;
+    },
+    onDeleted(todo) {
+      const todoURL = dataURL + todo.uid;
+      console.log(todo);
+      axios.delete(todoURL)
+        .then(() => {
+          this.getTodos();
+          this.confirmationMessage = 'Задача удалена';
+          this.showConfirmation = true;
+        });
     },
   },
   components: {
