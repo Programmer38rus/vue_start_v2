@@ -16,7 +16,7 @@
           <tr>
             <th>Uid</th>
             <th>Описание</th>
-            <th>Выполнена?</th>
+            <th>Выполнено?</th>
             <th></th>
           </tr>
         </thead>
@@ -47,72 +47,139 @@
     </div>
 
 <!--    Модальное окно добавления задач-->
-    <b-modal ref="addTodoModal"
-      id="todo-modal"
-      title="Добавить задачу"
-      hide-footer>
-      <b-form @submit="onSubmit" @reset="onReset" class="w-100">
-        <b-form-group id="form-description-group"
-          label="Описание"
-          label-for="form-description-input">
-        <b-form-input id="form-description-input"
-          type="text"
-          v-model="addTodoForm.description"
-          required
-          placeholder="Завести задачу">
-        </b-form-input>
-        </b-form-group>
-        <b-form-group id="form-complete-group">
-          <b-form-checkbox-group v-model="addTodoForm.is_completed" id="form-checks">
-            <b-form-checkbox value="true">Задача выполнена?</b-form-checkbox>
-          </b-form-checkbox-group>
-        </b-form-group>
-        <b-button type="submit" variant="primary">Добавить</b-button>
-        <b-button type="reset" variant="danger">Сброс</b-button>
-      </b-form>
-    </b-modal>
-<!--    Эксперементальная часть-->
+<!--    <b-modal ref="addTodoModal"-->
+<!--      id="todo-modal"-->
+<!--      title="Добавить задачу"-->
+<!--      hide-footer>-->
+<!--      <b-form @submit="onSubmit" @reset="onReset" class="w-100">-->
+<!--        <b-form-group id="form-description-group"-->
+<!--          label="Описание"-->
+<!--          label-for="form-description-input">-->
+<!--        <b-form-input id="form-description-input"-->
+<!--          type="text"-->
+<!--          v-model="addTodoForm.description"-->
+<!--          required-->
+<!--          placeholder="Завести задачу">-->
+<!--        </b-form-input>-->
+<!--        </b-form-group>-->
+<!--        <b-form-group id="form-complete-group">-->
+<!--          <b-form-checkbox-group v-model="addTodoForm.is_completed" id="form-checks">-->
+<!--            <b-form-checkbox value="true">Задача выполнена?</b-form-checkbox>-->
+<!--          </b-form-checkbox-group>-->
+<!--        </b-form-group>-->
+<!--        <b-button type="submit" variant="primary">Добавить</b-button>-->
+<!--        <b-button type="reset" variant="danger">Сброс</b-button>-->
+<!--      </b-form>-->
+<!--    </b-modal>-->
+
+<!--    Экспериментальная часть-->
     <div class="d-flex justify-content-center mt-5">
       <b-button variant="danger" id="testbtn" type="hider">RELLYTi</b-button>
       <b-col lg="4"><b-button variant="success" type="hider">RELLYTi</b-button></b-col>
-      <b-textarea v-model="todo"></b-textarea>
-
+      <b-textarea v-for="(todo, index) in todos"
+                  :key="index"
+                  v-model="todo.description"></b-textarea>
+    </div>
+    <div>
+      <b-button id="buttoncolum"
+                variant="outline-primary"
+                  v-for="(todo, index) in todos"
+                  :key="index"
+                  v-model="todo.description"
+                  @click="viewTodo(todo)">{{todo.uid}}</b-button>
     </div>
 
 <!--    Модальное окно изменения задач-->
+<!--    <div>-->
+<!--      <b-modal ref="updateTodoModal"-->
+<!--               id="todo-update-modal"-->
+<!--               title="Update"-->
+<!--               hide-footer>-->
+<!--        <b-form @submit="onUpdateSubmit" @reset="onUpdateReset" class="w-100">-->
+<!--          <b-form-group id="from-update-description-group"-->
+<!--                        label="Описание"-->
+<!--                        label-for="form-update-description-input">-->
+<!--            <b-form-input id="form-update-description-input"-->
+<!--                          type="text"-->
+<!--                          v-model="updateTodoForm.description"-->
+<!--                          required>-->
+<!--            </b-form-input>-->
+<!--          </b-form-group>-->
+<!--          <b-form-group id="form-update-complete-group">-->
+<!--            <b-form-checkbox-group v-model="updateTodoForm.is_completed" id="from-update-checks">-->
+<!--            <b-form-checkbox-group v-model="addTodoForm.is_completed" id="form-checks">-->
+<!--              <b-form-checkbox value="true">Task is completed</b-form-checkbox>-->
+<!--            </b-form-checkbox-group>-->
+<!--          </b-form-group>-->
+<!--          <b-button-group>-->
+<!--            <b-button type="submit" variant="primary">Submit</b-button>-->
+<!--            <b-button type="reset" variant="danger">Reset</b-button>-->
+<!--          </b-button-group>-->
+<!--        </b-form>-->
+<!--      </b-modal>-->
+<!--    </div>-->
+    <!--    Задача №2 делаем универсальное модальное окно-->
     <div>
-      <b-modal ref="updateTodoModal"
+      <b-modal v-if="shower == 1"
+               ref="addTodoModal"
+               id="todo-modal"
+               title="Добавить задачу"
+               hide-footer>
+      <b-modal v-esle-if="shower == 2"
+               ref="updateTodoModal"
                id="todo-update-modal"
                title="Update"
                hide-footer>
-        <b-form @submit="onUpdateSubmit" @reset="onUpdateReset" class="w-100">
+        <b-form v-if="shower == 1" @submit="onSubmit" @reset="onReset" class="w-100">
+        <b-form v-else-if="shower == 2" @submit="onUpdateSubmit" @reset="onUpdateReset" class="w-100">
           <b-form-group id="from-update-description-group"
                         label="Описание"
                         label-for="form-update-description-input">
-            <b-form-input id="form-update-description-input"
+            <b-form-input v-if="shower == 1"
+                          id="form-update-description-input"
                           type="text"
                           v-model="updateTodoForm.description"
                           required>
             </b-form-input>
+            <b-form-input v-esle-if="shower == 2"
+                          id="form-description-input"
+                          type="text"
+                          v-model="addTodoForm.description"
+                          required
+                          placeholder="Завести задачу">
+            </b-form-input>
           </b-form-group>
           <b-form-group id="form-update-complete-group">
-            <b-form-checkbox-group v-model="updateTodoForm.is_completed" id="from-update-checks">
+            <b-form-checkbox-group v-if="shower == 1"
+                                   v-model="addTodoForm.is_completed" id="form-checks">
+            <b-form-checkbox-group v-else-if="shower == 2"
+                                   v-model="updateTodoForm.is_completed" id="from-update-checks">
               <b-form-checkbox value="true">Task is completed</b-form-checkbox>
             </b-form-checkbox-group>
           </b-form-group>
           <b-button-group>
-            <b-button type="submit" variant="primary">Submit</b-button>
-            <b-button type="reset" variant="danger">Reset</b-button>
+            <template v-if="shower == 1">
+              <b-button type="submit" variant="primary">Submit</b-button>
+              <b-button type="reset" variant="danger">Reset</b-button>
+            </template>
+            <template v-else-if="shower == 2">
+              <b-button type="submit" variant="primary">Добавить</b-button>
+              <b-button type="reset" variant="danger">Сброс</b-button>
+            </template>
           </b-button-group>
         </b-form>
       </b-modal>
+      </b-modal>
     </div>
+    <modal
+      :show=shower></modal>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import Confirmation from './Confirmation.vue';
+import Modal from './Modal.vue';
 
 const dataURL = 'http://localhost:5000/api/tasks/';
 // const todoListURL = 'http://localhost:5000/api/tasks/';
@@ -136,6 +203,7 @@ export default {
       confirmationMessage: '',
       showConfirmation: false,
       texts: 'текст как есть',
+      shower: 1,
     };
   },
 
@@ -144,7 +212,7 @@ export default {
       axios.get(dataURL)
         .then((response) => {
           this.todos = response.data.tasks;
-          console.log(Confirmation);
+          console.table(this.todos);
         });
     },
     resetForm() {
@@ -184,6 +252,7 @@ export default {
     },
     updateTodo(todo) {
       this.updateTodoForm = todo;
+      console.table(todo);
     },
     onUpdateSubmit(event) {
       event.preventDefault();
@@ -217,9 +286,14 @@ export default {
           this.showConfirmation = true;
         });
     },
+    // Экспериментальная часть
+    viewTodo(todo) {
+      console.log(todo);
+    },
   },
   components: {
     confirmation: Confirmation,
+    modal: Modal,
   },
   created() {
     this.getTodos();
@@ -238,4 +312,13 @@ h2, td {
   .todo-uid {
     text-align: right;
   }
+
+/*эксперементальная часть*/
+#buttoncolum {
+  display: block;
+  /*flex-direction: column;*/
+  width: 100px;
+  margin-top: 1rem;
+  /*justify-content: right;*/
+}
 </style>
