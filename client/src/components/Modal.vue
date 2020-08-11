@@ -10,13 +10,6 @@
 <script>
 export default {
   name: 'Modal',
-  props: {
-    show: String,
-  },
-  // data() {
-  //   return {
-  //     shower: 2,
-  //   };
-  // },
+  props: ['show'],
 };
 </script>

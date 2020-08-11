@@ -58,6 +58,7 @@ def add_task():
 @app.route("/api/tasks/<uid:int>", method=["GET", "PUT", "DELETE"])
 def show_or_modify_task(uid):
     if bottle.request.method == "GET":
+        print("we is in the fun c!")
         return tasks_db[uid].to_dict()
     elif bottle.request.method == "PUT":
         if "description" in bottle.request.json:
