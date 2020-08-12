@@ -121,9 +121,9 @@
 <!--    Merge modal window-->
     <b-modal ref="mergeModal"
              id="merge-todo-modal"
-             :title="modal.title"
+             :title="modal.message"
              hide-footer>
-      <b-form :@submit="onSubmit" :@reset="onReset" class="w-100">
+      <b-form  class="w-100">
         <b-form-group id="form-description-group"
                       label="Описание"
                       label-for="form-description-input">
@@ -132,16 +132,15 @@
                         v-model="modal.formInput.description"
                         required>
 <!--                        placeholder="Завести задачу">-->
-
           </b-form-input>
         </b-form-group>
         <b-form-group id="form-complete-group">
-          <b-form-checkbox-group v-model="addTodoForm.is_completed" id="form-checks">
+          <b-form-checkbox-group v-model="modal.formInput.is_completed" id="form-checks">
             <b-form-checkbox value="true">Задача выполнена?</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
-        <b-button type="submit" variant="primary">Добавить</b-button>
-        <b-button type="reset" variant="danger">Сброс</b-button>
+        <b-button @click="modal.func1" variant="primary">Добавить</b-button>
+        <b-button @click="modal.func2" variant="danger">Сброс</b-button>
       </b-form>
     </b-modal>
     <modal
@@ -178,7 +177,7 @@ export default {
       texts: 'текст как есть',
       shower: 1,
       modal: {
-        title: '',
+        message: '',
         formInput: {},
         func1: '',
         func2: '',
@@ -195,19 +194,19 @@ export default {
         });
     },
     resetForm() {
-      this.addTodoForm.description = '';
-      this.addTodoForm.is_completed = [];
-      this.updateTodoForm.description = '';
-      this.updateTodoForm.is_completed = [];
+      // this.addTodoForm.description = '';
+      // this.addTodoForm.is_completed = [];
+      this.modal.formInput.description = '';
+      this.modal.formInput.is_completed = [];
     },
     onSubmit(event) {
       event.preventDefault();
-      this.$refs.addTodoModal.hide();
+      this.$refs.mergeModal.hide();
       console.log(this.$refs);
       // this.$refs.addTodoModal.toggle('#testbtn');
       const requestData = {
-        description: this.addTodoForm.description,
-        is_completed: this.addTodoForm.is_completed[0],
+        description: this.modal.formInput.description,
+        is_completed: this.modal.formInput.is_completed,
       };
       if (requestData.is_completed) {
         requestData.is_completed = true;
@@ -226,13 +225,15 @@ export default {
     },
     onReset(event) {
       event.preventDefault();
-      this.$refs.addTodoModal.hide();
+      this.$refs.mergeModal.hide();
       this.resetForm();
     },
     updateTodo(todo) {
       // this.updateTodoForm = todo;
-      this.modal.title = 'Изменить задачу';
+      this.modal.message = 'Изменить задачу';
       this.modal.formInput = todo;
+      this.modal.func1 = this.onUpdateSubmit;
+      this.modal.func2 = this.onUpdateReset;
       // this.modal.formInput =
       //   update: this.updateTodoForm.description,
       // };
@@ -241,6 +242,7 @@ export default {
       event.preventDefault();
       // this.$refs.updateTodoModal.hide();
       this.$refs.mergeModal.hide();
+      console.log('мыo в упдайте');
       const requestData = {
         description: this.modal.formInput.description,
         is_completed: this.modal.formInput.is_completed[0],
@@ -270,8 +272,10 @@ export default {
         });
     },
     addTodoModal() {
-      this.modal.title = 'Добавить задачу';
+      this.modal.message = 'Добавить задачу';
       this.modal.formInput = 'addTodoModal.description';
+      this.modal.func1 = this.onSubmit;
+      this.modal.func2 = this.onReset;
     },
     // Экспериментальная часть
     viewTodo(todo) {
