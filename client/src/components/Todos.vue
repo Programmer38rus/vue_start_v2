@@ -163,10 +163,10 @@ export default {
   data() {
     return {
       todos: [],
-      addTodoForm: {
-        description: '',
-        is_completed: [],
-      },
+      // addTodoForm: {
+      //   description: '',
+      //   is_completed: [],
+      // },
       // updateTodoForm: {
       //   uid: 0,
       //   description: '',
@@ -182,6 +182,7 @@ export default {
         func1: '',
         func2: '',
       },
+
     };
   },
 
@@ -190,24 +191,23 @@ export default {
       axios.get(dataURL)
         .then((response) => {
           this.todos = response.data.tasks;
-          console.table(this.todos);
         });
     },
     resetForm() {
       // this.addTodoForm.description = '';
       // this.addTodoForm.is_completed = [];
       this.modal.formInput.description = '';
-      this.modal.formInput.is_completed = [];
+      this.modal.formInput.is_completed = '';
     },
     onSubmit(event) {
       event.preventDefault();
       this.$refs.mergeModal.hide();
-      console.log(this.$refs);
       // this.$refs.addTodoModal.toggle('#testbtn');
       const requestData = {
         description: this.modal.formInput.description,
         is_completed: this.modal.formInput.is_completed,
       };
+      console.log(this.modal.formInput.description);
       if (requestData.is_completed) {
         requestData.is_completed = true;
       } else {
@@ -240,17 +240,14 @@ export default {
     },
     onUpdateSubmit(event) {
       event.preventDefault();
-      // this.$refs.updateTodoModal.hide();
       this.$refs.mergeModal.hide();
-      console.log('мыo в упдайте');
       const requestData = {
         description: this.modal.formInput.description,
-        is_completed: this.modal.formInput.is_completed[0],
+        is_completed: this.modal.formInput.is_completed,
       };
       const todoURL = dataURL + this.modal.formInput.uid;
       axios.put(todoURL, requestData)
         .then(() => {
-          // console.log(todoURL);
           this.getTodos();
           this.confirmationMessage = 'Задача обновлена';
           this.showConfirmation = true;
@@ -273,14 +270,17 @@ export default {
     },
     addTodoModal() {
       this.modal.message = 'Добавить задачу';
-      this.modal.formInput = 'addTodoModal.description';
       this.modal.func1 = this.onSubmit;
       this.modal.func2 = this.onReset;
     },
-    // Экспериментальная часть
-    viewTodo(todo) {
-      console.log(todo);
+    counterTodos() {
+      console.log(this.todos);
+      this.todos.forEach((value, index) => {
+        console.log(value, index);
+        return value;
+      });
     },
+    // Экспериментальная часть
   },
   components: {
     confirmation: Confirmation,
@@ -288,6 +288,7 @@ export default {
   },
   created() {
     this.getTodos();
+    this.counterTodos();
   },
 };
 </script>
