@@ -6,15 +6,17 @@
               :message='confirmationMessage'
               v-if='showConfirmation'>
       </confirmation>
-      <button type="button" v-on:click="addTodoModal()"
-              id="task-add" class="btn btn-success btn-sm align-left d-block"
-        v-b-modal.merge-todo-modal>
-        Добавить задачу
-      </button>
-      <div>
-        Всего задачь {{tasksCount.all}}
-        Выполненых {{tasksCount.complete}}
-        Невыполнеых {{tasksCount.noComplete}}
+      <div class="container row row-cols-2 align-items-center">
+        <button type="button" v-on:click="addTodoConfigureModal()"
+                id="task-add" class="btn btn-success btn-sm align-left d-block"
+          v-b-modal.merge-todo-modal>
+          Добавить задачу
+        </button>
+        <div class="ml-md-3">
+          <span class="font-weight-bold">Всего задачь: </span>{{tasksCount.all}}
+          <span class="font-weight-bold">Выполненых: </span>{{tasksCount.complete}}
+          <span class="font-weight-bold">Невыполненых: </span>{{tasksCount.noComplete}}
+        </div>
       </div>
       <table class="table table-dark table-table-stripped table-hover">
 
@@ -39,7 +41,8 @@
               <div class="btn-group" role="group">
 <!--                -->
 <!--                -->
-                <button type="button" @click="updateTodo(todo)" v-b-modal.merge-todo-modal
+                <button type="button" @click="updateTodoConfigureModal(todo)"
+                        v-b-modal.merge-todo-modal
                         class="btn btn-secondary btn-sm">Обновить</button>
                 &nbsp;
 <!--                -->
@@ -149,7 +152,8 @@
       </b-form>
     </b-modal>
     <modal
-      :show=shower></modal>
+      :show=shower
+    ></modal>
   </div>
 </template>
 
@@ -202,13 +206,18 @@ export default {
         .then((response) => {
           this.todos = response.data.tasks;
           this.counterTodos(this.todos);
+        })
+        .catch((error) => {
+          alert(error);
+          this.getTodos();
         });
     },
     resetForm() {
-      // this.addTodoForm.description = '';
-      // this.addTodoForm.is_completed = [];
       this.modal.formInput.description = '';
       this.modal.formInput.is_completed = '';
+      this.tasksCount.all = 0;
+      this.tasksCount.complete = 0;
+      this.tasksCount.noComplete = 0;
     },
     onSubmit(event) {
       event.preventDefault();
@@ -227,6 +236,9 @@ export default {
           this.getTodos();
           this.confirmationMessage = `Задача "${requestData.description}" добавлена`;
           this.showConfirmation = true;
+        })
+        .catch((error) => {
+          alert(error);
         });
       this.resetForm();
     },
@@ -235,7 +247,13 @@ export default {
       this.$refs.mergeModal.hide();
       this.resetForm();
     },
-    updateTodo(todo) {
+    addTodoConfigureModal() {
+      this.modal.message = 'Добавить задачу';
+      this.modal.func1 = this.onSubmit;
+      this.modal.func2 = this.onReset;
+      this.modal.btnName = 'Добавить';
+    },
+    updateTodoConfigureModal(todo) {
       this.modal.message = 'Изменить задачу';
       this.modal.formInput = todo;
       this.modal.func1 = this.onUpdateSubmit;
@@ -256,6 +274,7 @@ export default {
           this.confirmationMessage = 'Задача обновлена';
           this.showConfirmation = true;
         });
+      this.resetForm();
     },
     onUpdateReset(event) {
       event.preventDefault();
@@ -272,19 +291,13 @@ export default {
           this.showConfirmation = true;
         });
     },
-    addTodoModal() {
-      this.modal.message = 'Добавить задачу';
-      this.modal.func1 = this.onSubmit;
-      this.modal.func2 = this.onReset;
-      this.modal.btnName = 'Добавить';
-    },
     counterTodos(todos) {
       this.tasksCount.all = todos.length;
       todos.forEach((value) => {
         if (value.is_completed) {
-          this.tasksCount.complete = this.tasksCount.complete + 1;
+          this.tasksCount.complete += 1;
         } else {
-          this.tasksCount.noComplete = this.tasksCount.noComplete + 1;
+          this.tasksCount.noComplete += 1;
         }
       });
     },
