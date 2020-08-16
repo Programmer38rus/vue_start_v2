@@ -13,8 +13,8 @@
           Добавить задачу
         </button>
         <div class="ml-md-3">
-          <span class="font-weight-bold">Всего задачь: </span>{{tasksCount.all}}
-          <span class="font-weight-bold">Выполненых: </span>{{tasksCount.complete}}
+          <span class="font-weight-bold">Всего задачь: </span>{{tasksCount.all}} |
+          <span class="font-weight-bold">Выполненых: </span>{{tasksCount.complete}} |
           <span class="font-weight-bold">Невыполненых: </span>{{tasksCount.noComplete}}
         </div>
       </div>
@@ -205,10 +205,13 @@ export default {
       axios.get(dataURL)
         .then((response) => {
           this.todos = response.data.tasks;
-          this.counterTodos(this.todos);
+          // this.counterTodos(this.todos);
+          // console.log(JSON.parse(this.todos));
+          localStorage.setItem('todos', this.todos);
         })
-        .catch((error) => {
-          alert(error);
+        .catch(() => {
+          this.confirmationMessage = 'Сервер не доступен....';
+          this.showConfirmation = 'true';
           this.getTodos();
         });
     },
@@ -300,6 +303,10 @@ export default {
           this.tasksCount.noComplete += 1;
         }
       });
+    },
+    counterInLocalStorage() {
+      const a = localStorage.getItem('todos');
+      console.log(a);
     },
     // Экспериментальная часть
   },
