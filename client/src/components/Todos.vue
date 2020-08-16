@@ -11,6 +11,11 @@
         v-b-modal.merge-todo-modal>
         Добавить задачу
       </button>
+      <div>
+        Всего задачь {{tasksCount.all}}
+        Выполненых {{tasksCount.complete}}
+        Невыполнеых {{tasksCount.noComplete}}
+      </div>
       <table class="table table-dark table-table-stripped table-hover">
 
         <thead class="thead-light">
@@ -139,7 +144,7 @@
             <b-form-checkbox value="true">Задача выполнена?</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
-        <b-button @click="modal.func1" variant="primary">Добавить</b-button>
+         <b-button @click="modal.func1" variant="primary">{{this.modal.btnName}}</b-button>
         <b-button @click="modal.func2" variant="danger">Сброс</b-button>
       </b-form>
     </b-modal>
@@ -181,8 +186,13 @@ export default {
         formInput: {},
         func1: '',
         func2: '',
+        btnName: '',
       },
-
+      tasksCount: {
+        all: 0,
+        complete: 0,
+        noComplete: 0,
+      },
     };
   },
 
@@ -191,6 +201,7 @@ export default {
       axios.get(dataURL)
         .then((response) => {
           this.todos = response.data.tasks;
+          this.counterTodos(this.todos);
         });
     },
     resetForm() {
@@ -202,12 +213,10 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       this.$refs.mergeModal.hide();
-      // this.$refs.addTodoModal.toggle('#testbtn');
       const requestData = {
         description: this.modal.formInput.description,
         is_completed: this.modal.formInput.is_completed,
       };
-      console.log(this.modal.formInput.description);
       if (requestData.is_completed) {
         requestData.is_completed = true;
       } else {
@@ -218,8 +227,6 @@ export default {
           this.getTodos();
           this.confirmationMessage = `Задача "${requestData.description}" добавлена`;
           this.showConfirmation = true;
-          // Confirmation.methods.hider(true);
-          // console.log(this);
         });
       this.resetForm();
     },
@@ -229,14 +236,11 @@ export default {
       this.resetForm();
     },
     updateTodo(todo) {
-      // this.updateTodoForm = todo;
       this.modal.message = 'Изменить задачу';
       this.modal.formInput = todo;
       this.modal.func1 = this.onUpdateSubmit;
       this.modal.func2 = this.onUpdateReset;
-      // this.modal.formInput =
-      //   update: this.updateTodoForm.description,
-      // };
+      this.modal.btnName = 'Изменить';
     },
     onUpdateSubmit(event) {
       event.preventDefault();
@@ -272,12 +276,16 @@ export default {
       this.modal.message = 'Добавить задачу';
       this.modal.func1 = this.onSubmit;
       this.modal.func2 = this.onReset;
+      this.modal.btnName = 'Добавить';
     },
-    counterTodos() {
-      console.log(this.todos);
-      this.todos.forEach((value, index) => {
-        console.log(value, index);
-        return value;
+    counterTodos(todos) {
+      this.tasksCount.all = todos.length;
+      todos.forEach((value) => {
+        if (value.is_completed) {
+          this.tasksCount.complete = this.tasksCount.complete + 1;
+        } else {
+          this.tasksCount.noComplete = this.tasksCount.noComplete + 1;
+        }
       });
     },
     // Экспериментальная часть
@@ -288,7 +296,6 @@ export default {
   },
   created() {
     this.getTodos();
-    this.counterTodos();
   },
 };
 </script>
