@@ -1,11 +1,15 @@
 <template>
   <div class="container">
-    <div class="col-sm-10">
+    <div>
       <h1>TASKS</h1>
-      <confirmation
-              :message='confirmationMessage'
-              v-if='showConfirmation'>
-      </confirmation>
+      <transition
+        name="slide-fade"
+      >
+        <confirmation
+                :message='confirmationMessage'
+                v-if='showConfirmation'>
+        </confirmation>
+      </transition>
       <div class="container row row-cols-2 align-items-center">
         <button type="button" v-on:click="addTodoConfigureModal()"
                 id="task-add" class="btn btn-success btn-sm align-left d-block"
@@ -110,21 +114,21 @@
 <!--    </b-modal>-->
 
 <!--    Экспериментальная часть-->
-    <div class="d-flex justify-content-center mt-5">
-      <b-button variant="danger" id="testbtn" type="hider">RELLYTi</b-button>
-      <b-col lg="4"><b-button variant="success" type="hider">RELLYTi</b-button></b-col>
-      <b-textarea v-for="(todo, index) in todos"
-                  :key="index"
-                  v-model="todo.description"></b-textarea>
-    </div>
-    <div>
-      <b-button id="buttoncolum"
-                variant="outline-primary"
-                  v-for="(todo, index) in todos"
-                  :key="index"
-                  v-model="todo.description"
-                  @click="viewTodo(todo)">{{todo.uid}}</b-button>
-    </div>
+<!--    <div class="d-flex justify-content-center mt-5">-->
+<!--      <b-button variant="danger" id="testbtn" type="hider">RELLYTi</b-button>-->
+<!--      <b-col lg="4"><b-button variant="success" type="hider">RELLYTi</b-button></b-col>-->
+<!--      <b-textarea v-for="(todo, index) in todos"-->
+<!--                  :key="index"-->
+<!--                  v-model="todo.description"></b-textarea>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <b-button id="buttoncolum"-->
+<!--                variant="outline-primary"-->
+<!--                  v-for="(todo, index) in todos"-->
+<!--                  :key="index"-->
+<!--                  v-model="todo.description"-->
+<!--                  @click="viewTodo(todo)">{{todo.uid}}</b-button>-->
+<!--    </div>-->
 
 <!--    Merge modal window-->
     <b-modal ref="mergeModal"
@@ -147,8 +151,8 @@
             <b-form-checkbox value="true">Задача выполнена?</b-form-checkbox>
           </b-form-checkbox-group>
         </b-form-group>
-         <b-button @click="modal.func1" variant="primary">{{this.modal.btnName}}</b-button>
-        <b-button @click="modal.func2" variant="danger">Сброс</b-button>
+          <b-button @click="modal.func1" variant="primary">{{this.modal.btnName}}</b-button>
+          <b-button @click="modal.func2" variant="danger">Сброс</b-button>
       </b-form>
     </b-modal>
     <modal
@@ -181,13 +185,15 @@ export default {
       //   description: '',
       //   is_completed: [],
       // },
+      shower: 1,
       confirmationMessage: '',
       showConfirmation: false,
-      texts: 'текст как есть',
-      shower: 1,
       modal: {
         message: '',
-        formInput: {},
+        formInput: {
+          description: '',
+          is_completed: '',
+        },
         func1: '',
         func2: '',
         btnName: '',
@@ -210,7 +216,7 @@ export default {
           localStorage.setItem('todos', this.todos);
         })
         .catch(() => {
-          this.confirmationMessage = 'Сервер не доступен....';
+          this.confirmationMessage = 'Сервер не доступен...';
           this.showConfirmation = 'true';
           this.getTodos();
         });
@@ -229,11 +235,12 @@ export default {
         description: this.modal.formInput.description,
         is_completed: Boolean(this.modal.formInput.is_completed[0]),
       };
-      if (requestData.is_completed) {
-        requestData.is_completed = true;
-      } else {
-        requestData.is_completed = false;
-      }
+      console.log(requestData);
+      // if (requestData.is_completed) {
+      //   requestData.is_completed = true;
+      // } else {
+      //   requestData.is_completed = false;
+      // }
       axios.post(todoAddURL, requestData)
         .then(() => {
           this.getTodos();
@@ -341,5 +348,17 @@ h2, td {
   width: 100px;
   margin-top: 1rem;
   /*justify-content: right;*/
+}
+.slide-fade-enter-active {
+  /*transition: all .3s ease;*/
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+  /* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>

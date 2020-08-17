@@ -1,12 +1,21 @@
 <template>
   <div>
     <div>
-      <b-alert ref="hider" variant="success" show
+      <b-alert ref="hider" variant="success"
+        show
       >{{ message }}
-        <b-button type="hider" class="close" data-dismiss="alert"
+        <b-button
+          type="hider"
+          class="close"
+          data-dismiss="alert"
           aria-label="Close"
-          @click="hider()">
-          <span aria-hidden="true">&times;</span>
+          dismissible
+        >
+          <span
+            aria-hidden="true"
+          >
+            &times;
+          </span>
         </b-button>
       </b-alert>
     </div>
@@ -14,14 +23,11 @@
 </template>
 
 <script>
+// import Todos from './Todos.vue';
 export default {
   name: 'Confirmation',
   props: ['message'],
   methods: {
-    hider(atr) {
-      // console.log(this.$refs);
-      this.$refs.hider.show = atr;
-    },
   },
 };
 </script>
