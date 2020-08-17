@@ -205,7 +205,7 @@ export default {
       axios.get(dataURL)
         .then((response) => {
           this.todos = response.data.tasks;
-          // this.counterTodos(this.todos);
+          this.counterTodos(this.todos);
           // console.log(JSON.parse(this.todos));
           localStorage.setItem('todos', this.todos);
         })
@@ -227,7 +227,7 @@ export default {
       this.$refs.mergeModal.hide();
       const requestData = {
         description: this.modal.formInput.description,
-        is_completed: this.modal.formInput.is_completed,
+        is_completed: Boolean(this.modal.formInput.is_completed[0]),
       };
       if (requestData.is_completed) {
         requestData.is_completed = true;
@@ -268,9 +268,10 @@ export default {
       this.$refs.mergeModal.hide();
       const requestData = {
         description: this.modal.formInput.description,
-        is_completed: this.modal.formInput.is_completed,
+        is_completed: Boolean(this.modal.formInput.is_completed[0]),
       };
       const todoURL = dataURL + this.modal.formInput.uid;
+      console.log(requestData);
       axios.put(todoURL, requestData)
         .then(() => {
           this.getTodos();
@@ -289,6 +290,7 @@ export default {
       const todoURL = dataURL + todo.uid;
       axios.delete(todoURL)
         .then(() => {
+          this.resetForm();
           this.getTodos();
           this.confirmationMessage = 'Задача удалена';
           this.showConfirmation = true;

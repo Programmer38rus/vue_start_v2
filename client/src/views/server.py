@@ -1,5 +1,6 @@
 import bottle
 from truckpad.bottle.cors import CorsPlugin, enable_cors
+from add_to_db import form_list, db_add, delete_task, change_task
 
 app = bottle.Bottle()
 
@@ -30,50 +31,68 @@ tasks_db = {
     uid: Todoitem(desc, uid)
     for uid, desc in enumerate(iterable=task_list, start=1)
 }
-print(tasks_db)
+# print(tasks_db)
 
 @enable_cors
 @app.route("/api/tasks/")
 def index():
-    # bottle.response.headers['Access-Control-Allow-Origin'] = 'http://localhost:8080'
-    tasks = [task.to_dict() for task in tasks_db.values()]
-    for i in tasks_db.values():
-        print(i)
-    return {"tasks": tasks}
+    # tasks = [task.to_dict() for task in tasks_db.values()]
+    # for i in tasks_db.values():
+    #     print(i)
+    # return {"tasks": tasks}
+
+    db_list = form_list()
+    db_on_dict = [child.to_dict() for child in db_list]
+
+    return {"tasks": db_on_dict}
 
 @enable_cors
 @app.route("/api/add-task/", method="POST")
 def add_task():
-    desc = bottle.request.json['description']
-    is_completed = bottle.request.json['is_completed']
+    # desc = bottle.request.json['description']
+    # is_completed = bottle.request.json['is_completed']
+    #
+    # if len(desc) > 0:
+    #     new_uid = max(tasks_db.keys()) + 1
+    #     t = Todoitem(desc, new_uid)
+    #     t.is_completed = is_completed
+    #     tasks_db[new_uid] = t
+    # return "OK"
+    json = bottle.request.json
+    db_add(json)
 
-    if len(desc) > 0:
-        new_uid = max(tasks_db.keys()) + 1
-        t = Todoitem(desc, new_uid)
-        t.is_completed = is_completed
-        tasks_db[new_uid] = t
-    return "OK"
+    return "ОК - добавлена новая задача"
+
+
 
 @enable_cors
 @app.route("/api/tasks/<uid:int>", method=["GET", "PUT", "DELETE"])
 def show_or_modify_task(uid):
     if bottle.request.method == "GET":
-        print("we is in the fun c!")
+        print("we is in the func!")
         return tasks_db[uid].to_dict()
     elif bottle.request.method == "PUT":
-        if "description" in bottle.request.json:
-            tasks_db[uid].description = bottle.request.json["description"]
-        if "is_completed" in bottle.request.json:
-            tasks_db[uid].is_completed = bottle.request.json["is_completed"]
+        # if "description" in bottle.request.json:
+        #     tasks_db[uid].description = bottle.request.json["description"]
+        # if "is_completed" in bottle.request.json:
+        #     tasks_db[uid].is_completed = bottle.request.json["is_completed"]
+        task = bottle.request.json
+        print(task)
+        change_task(uid, task)
+
         return f'Modified task {uid}'
     elif bottle.request.method == "DELETE":
-        tasks_db.pop(uid)
+        # tasks_db.pop(uid)
+        delete_task(uid)
+
         return f"Deleted task {uid}"
 
-@bottle.route("/api/delete/<uid:int>")
-def api_delete(uid):
-    tasks_db.pop(uid)
-    return "OK"
+# @bottle.route("/api/delete/<uid:int>")
+# def api_delete(uid):
+#     tasks_db.pop(uid)
+#     return "OK"
+#     delete_task(uid)
+
 
 
 @bottle.route("/api/complete/<uid:int>")
