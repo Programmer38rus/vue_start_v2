@@ -3,19 +3,19 @@
     <div>
       <b-alert ref="hider" variant="success"
         show
+        dismissible
       >{{ message }}
         <b-button
           type="hider"
           class="close"
           data-dismiss="alert"
           aria-label="Close"
-          dismissible
         >
-          <span
+          <b
             aria-hidden="true"
           >
             &times;
-          </span>
+          </b>
         </b-button>
       </b-alert>
     </div>
