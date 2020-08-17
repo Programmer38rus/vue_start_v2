@@ -4,19 +4,10 @@
       <b-alert ref="hider" variant="success"
         show
         dismissible
+        fade
       >{{ message }}
-        <b-button
-          type="hider"
-          class="close"
-          data-dismiss="alert"
-          aria-label="Close"
-        >
-          <b
-            aria-hidden="true"
-          >
-            &times;
+          <b>
           </b>
-        </b-button>
       </b-alert>
     </div>
   </div>
@@ -27,7 +18,15 @@
 export default {
   name: 'Confirmation',
   props: ['message'],
+  data() {
+    return {
+      dismissSecs: 5,
+      dismissCountDown: 0,
+      showDismissibleAlert: false
+    };
+  },
   methods: {
+
   },
 };
 </script>
