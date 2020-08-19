@@ -1,6 +1,6 @@
 import bottle
 from truckpad.bottle.cors import CorsPlugin, enable_cors
-from db_operations import form_list, add_to_db, delete_task, change_task
+from db_operations import form_list, add_task_to_db, delete_task, change_task
 
 app = bottle.Bottle()
 
@@ -59,7 +59,7 @@ def add_task():
     #     tasks_db[new_uid] = t
     # return "OK"
     json = bottle.request.json
-    add_to_db(json)
+    add_task_to_db(json)
 
     return "ОК - добавлена новая задача"
 

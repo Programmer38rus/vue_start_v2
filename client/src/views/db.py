@@ -1,13 +1,14 @@
 import sqlalchemy as sa
 import os
-# import uuid
+import uuid
 
 metadata = sa.MetaData()
 
 Todos = sa.Table('Todos', metadata,
-                 sa.Column('uid', sa.Integer, primary_key=True),
+                 sa.Column('id', sa.Integer, primary_key=True),
                  sa.Column('description', sa.Text),
                  sa.Column('is_completed', sa.Boolean),
+                 sa.Column('uid', sa.Text),
                 )
 
 
