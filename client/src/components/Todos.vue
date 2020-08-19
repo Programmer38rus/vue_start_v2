@@ -22,6 +22,7 @@
           <span class="font-weight-bold">Невыполненых: </span>{{tasksCount.noComplete}}
         </div>
       </div>
+
       <table class="table table-dark table-table-stripped table-hover">
 
         <thead class="thead-light">
@@ -33,7 +34,7 @@
           </tr>
         </thead>
 
-        <tbody>
+        <tbody class="">
           <tr v-for="(todo, index) in todos" :key="index">
             <td class="todo-uid">{{ todo.uid }}</td>
             <td>{{ todo.description }} </td>
@@ -155,16 +156,12 @@
           <b-button @click="modal.func2" variant="danger">Сброс</b-button>
       </b-form>
     </b-modal>
-    <modal
-      :show=shower
-    ></modal>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import Confirmation from './Confirmation.vue';
-import Modal from './Modal.vue';
 
 const dataURL = 'http://localhost:5000/api/tasks/';
 // const todoListURL = 'http://localhost:5000/api/tasks/';
@@ -199,9 +196,9 @@ export default {
         btnName: '',
       },
       tasksCount: {
-        all: 0,
-        complete: 0,
-        noComplete: 0,
+        all: null,
+        complete: null,
+        noComplete: null,
       },
     };
   },
@@ -211,9 +208,8 @@ export default {
       axios.get(dataURL)
         .then((response) => {
           this.todos = response.data.tasks;
-          this.counterTodos(this.todos);
-          // console.log(JSON.parse(this.todos));
-          localStorage.setItem('todos', this.todos);
+          localStorage.setItem('todos', JSON.stringify(this.todos));
+          this.counterTodos();
         })
         .catch(() => {
           this.confirmationMessage = 'Сервер не доступен...';
@@ -224,9 +220,6 @@ export default {
     resetForm() {
       this.modal.formInput.description = '';
       this.modal.formInput.is_completed = '';
-      this.tasksCount.all = 0;
-      this.tasksCount.complete = 0;
-      this.tasksCount.noComplete = 0;
     },
     onSubmit(event) {
       event.preventDefault();
@@ -235,7 +228,6 @@ export default {
         description: this.modal.formInput.description,
         is_completed: Boolean(this.modal.formInput.is_completed[0]),
       };
-      console.log(requestData);
       // if (requestData.is_completed) {
       //   requestData.is_completed = true;
       // } else {
@@ -303,25 +295,18 @@ export default {
           this.showConfirmation = true;
         });
     },
-    counterTodos(todos) {
-      this.tasksCount.all = todos.length;
-      todos.forEach((value) => {
-        if (value.is_completed) {
-          this.tasksCount.complete += 1;
-        } else {
-          this.tasksCount.noComplete += 1;
-        }
-      });
-    },
-    counterInLocalStorage() {
-      const a = localStorage.getItem('todos');
-      console.log(a);
+    counterTodos() {
+      localStorage.setItem('todos', JSON.stringify(this.todos));
+      const json = JSON.parse(localStorage.getItem('todos'));
+      this.tasksCount.all = json.length;
+      const complete = json.filter((item) => item.is_completed === true);
+      this.tasksCount.complete = complete.length;
+      this.tasksCount.noComplete = this.tasksCount.all - this.tasksCount.complete;
     },
     // Экспериментальная часть
   },
   components: {
     confirmation: Confirmation,
-    modal: Modal,
   },
   created() {
     this.getTodos();

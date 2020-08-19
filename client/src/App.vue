@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <div id="nav" class="container">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/todos">Todos</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/fetch">Fetch</router-link> |
-      <router-link to="/hw">HW</router-link>
+<!--      <router-link to="/">Home</router-link> |-->
+<!--      <router-link to="/todos">Todos</router-link> |-->
+<!--      <router-link to="/about">About</router-link> |-->
+<!--      <router-link to="/fetch">Fetch</router-link> |-->
+<!--      <router-link to="/hw">HW</router-link>-->
     </div>
     <router-view/>
   </div>

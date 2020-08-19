@@ -1,36 +1,36 @@
 import bottle
 from truckpad.bottle.cors import CorsPlugin, enable_cors
-from add_to_db import form_list, db_add, delete_task, change_task
+from db_operations import form_list, add_to_db, delete_task, change_task
 
 app = bottle.Bottle()
 
-class Todoitem:
-    def __init__(self, descriprion, unique_id):
-        self.description = descriprion
-        self.is_completed = False
-        self.uid = unique_id
-
-    def __str__(self):
-        return self.description.lower()
-
-    def to_dict(self):
-        return {
-            "description": self.description,
-            "is_completed": self.is_completed,
-            "uid": self.uid
-        }
-
-
-task_list = ["написать код",
-             "покормить морскую свинку",
-             "постирать кроссовки",
-             "поесть еды"
-             ]
-
-tasks_db = {
-    uid: Todoitem(desc, uid)
-    for uid, desc in enumerate(iterable=task_list, start=1)
-}
+# class Todoitem:
+#     def __init__(self, descriprion, unique_id):
+#         self.description = descriprion
+#         self.is_completed = False
+#         self.uid = unique_id
+#
+#     def __str__(self):
+#         return self.description.lower()
+#
+#     def to_dict(self):
+#         return {
+#             "description": self.description,
+#             "is_completed": self.is_completed,
+#             "uid": self.uid
+#         }
+#
+#
+# task_list = ["написать код",
+#              "покормить морскую свинку",
+#              "постирать кроссовки",
+#              "поесть еды"
+#              ]
+#
+# tasks_db = {
+#     uid: Todoitem(desc, uid)
+#     for uid, desc in enumerate(iterable=task_list, start=1)
+# }
 # print(tasks_db)
 
 @enable_cors
@@ -59,7 +59,7 @@ def add_task():
     #     tasks_db[new_uid] = t
     # return "OK"
     json = bottle.request.json
-    db_add(json)
+    add_to_db(json)
 
     return "ОК - добавлена новая задача"
 

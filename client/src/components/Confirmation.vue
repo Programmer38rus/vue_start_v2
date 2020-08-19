@@ -22,7 +22,7 @@ export default {
     return {
       dismissSecs: 5,
       dismissCountDown: 0,
-      showDismissibleAlert: false
+      showDismissibleAlert: false,
     };
   },
   methods: {

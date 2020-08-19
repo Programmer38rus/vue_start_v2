@@ -25,7 +25,7 @@ engine = sa.create_engine(data)
 Session = sessionmaker(engine)
 session = Session()
 
-def db_add(json):
+def add_to_db(json):
     add = Todos(description=json['description'], is_completed=json['is_completed'])
     session.add(add)
     session.commit()
