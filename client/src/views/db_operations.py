@@ -4,7 +4,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import uuid
 
-
 Base = declarative_base()
 
 
@@ -13,13 +12,15 @@ class Todos(Base):
 
     description = sa.Column(sa.TEXT)
     is_completed = sa.Column(sa.Boolean)
-    id = sa.Column(sa.UUID, primary_key=True)
-    uid = sa.Column(sa.TEXT)
+    id = sa.Column(sa.Integer, primary_key=True)
+    uid = sa.Column(sa.String)
+
 
     def to_dict(self):
         return {
             "description": self.description,
             "is_completed": self.is_completed,
+            "id": self.id,
             "uid": self.uid
         }
 
@@ -34,7 +35,9 @@ def add_task_to_db(json):
     :param json:
     :return:
     """
-    add = Todos(description=json['description'], is_completed=json['is_completed'])
+    # key = uuid.uuid4()
+    add = Todos(description=json['description'], is_completed=json['is_completed'],
+                uid=str(uuid.uuid4()))
     session.add(add)
     session.commit()
     session.close()

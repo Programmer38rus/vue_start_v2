@@ -1,6 +1,5 @@
 import sqlalchemy as sa
 import os
-import uuid
 
 metadata = sa.MetaData()
 
@@ -8,7 +7,7 @@ Todos = sa.Table('Todos', metadata,
                  sa.Column('id', sa.Integer, primary_key=True),
                  sa.Column('description', sa.Text),
                  sa.Column('is_completed', sa.Boolean),
-                 sa.Column('uid', sa.Text),
+                 sa.Column('uid', sa.String),
                 )
 
 

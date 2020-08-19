@@ -66,7 +66,7 @@ def add_task():
 
 
 @enable_cors
-@app.route("/api/tasks/<uid:int>", method=["GET", "PUT", "DELETE"])
+@app.route("/api/tasks/<uid>", method=["GET", "PUT", "DELETE"])
 def show_or_modify_task(uid):
     if bottle.request.method == "GET":
         print("we is in the func!")

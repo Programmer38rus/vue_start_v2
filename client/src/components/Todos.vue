@@ -190,6 +190,7 @@ export default {
         formInput: {
           description: '',
           is_completed: '',
+          uid: '',
         },
         func1: '',
         func2: '',
@@ -208,6 +209,7 @@ export default {
       axios.get(dataURL)
         .then((response) => {
           this.todos = response.data.tasks;
+          console.table(this.todos);
           localStorage.setItem('todos', JSON.stringify(this.todos));
           this.counterTodos();
         })
