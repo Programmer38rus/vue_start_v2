@@ -230,11 +230,6 @@ export default {
         description: this.modal.formInput.description,
         is_completed: Boolean(this.modal.formInput.is_completed[0]),
       };
-      // if (requestData.is_completed) {
-      //   requestData.is_completed = true;
-      // } else {
-      //   requestData.is_completed = false;
-      // }
       axios.post(todoAddURL, requestData)
         .then(() => {
           this.getTodos();
