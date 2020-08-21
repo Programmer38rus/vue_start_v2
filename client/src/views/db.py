@@ -22,4 +22,3 @@ else:
     metadata.create_all(engine)
 
     print('*** Data is created ***')
-

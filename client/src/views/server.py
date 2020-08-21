@@ -21,7 +21,6 @@ def add_task():
     return "ОК - добавлена новая задача"
 
 
-
 @enable_cors
 @app.route("/api/tasks/<uid>", method=["GET", "PUT", "DELETE"])
 def show_or_modify_task(uid):
@@ -34,6 +33,7 @@ def show_or_modify_task(uid):
         change_task(uid, task)
 
         return f'Modified task {uid}'
+
     elif bottle.request.method == "DELETE":
         delete_task(uid)
 

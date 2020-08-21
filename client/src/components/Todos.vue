@@ -36,7 +36,7 @@
 
         <tbody class="">
           <tr v-for="(todo, index) in todos" :key="index">
-            <td class="todo-uid">{{ todo.uid }}</td>
+            <td class="todo-uid">{{ index + 1 }}</td>
             <td>{{ todo.description }} </td>
             <td>
               <span v-if="todo.is_completed">Выполнено</span>
@@ -114,25 +114,9 @@
 <!--      </b-form>-->
 <!--    </b-modal>-->
 
-<!--    Экспериментальная часть-->
-<!--    <div class="d-flex justify-content-center mt-5">-->
-<!--      <b-button variant="danger" id="testbtn" type="hider">RELLYTi</b-button>-->
-<!--      <b-col lg="4"><b-button variant="success" type="hider">RELLYTi</b-button></b-col>-->
-<!--      <b-textarea v-for="(todo, index) in todos"-->
-<!--                  :key="index"-->
-<!--                  v-model="todo.description"></b-textarea>-->
-<!--    </div>-->
-<!--    <div>-->
-<!--      <b-button id="buttoncolum"-->
-<!--                variant="outline-primary"-->
-<!--                  v-for="(todo, index) in todos"-->
-<!--                  :key="index"-->
-<!--                  v-model="todo.description"-->
-<!--                  @click="viewTodo(todo)">{{todo.uid}}</b-button>-->
-<!--    </div>-->
 
 <!--    Merge modal window-->
-    <b-modal ref="mergeModal"
+   <b-modal ref="mergeModal"
              id="merge-todo-modal"
              :title="modal.message"
              hide-footer>
