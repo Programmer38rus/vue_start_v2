@@ -114,7 +114,6 @@
 <!--      </b-form>-->
 <!--    </b-modal>-->
 
-
 <!--    Merge modal window-->
    <b-modal ref="mergeModal"
              id="merge-todo-modal"
